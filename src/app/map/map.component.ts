@@ -34,6 +34,8 @@ export class MapComponent implements AfterViewInit {
   arrEstados = [];
   arrMunicipios = [];
   arrActividades = [];
+  arrLocalidades = [];
+  poblacion = -1;
 
   constructor(private markerService: MarkerService,
     private dataApiService: DataApiService
@@ -64,7 +66,7 @@ export class MapComponent implements AfterViewInit {
  private getEstados()
  {
   this.dataApiService.getEstados().subscribe((estados: any) => {
-    this.arrEstados = estados;
+    this.arrEstados = estados.content;
    });
  
  }
@@ -72,7 +74,7 @@ export class MapComponent implements AfterViewInit {
  private getUnidades()
  {
   this.dataApiService.getUnidades().subscribe((unidades: any) => {
-    this.arrActividades = unidades;
+    this.arrActividades = unidades.content;
    });
  
  }
@@ -86,10 +88,36 @@ export class MapComponent implements AfterViewInit {
    });
  
  }
+
+ changeLocalidad()
+ {
+   this.dataApiService.getPoblacion(this.selectedMunicipio, this.selectedEstado, this.selectedMunicipio)
+   .subscribe((poblacion: any) => {
+     console.log(poblacion);
+     
+    this.poblacion = poblacion[0].pobtot;
+
+   });
+ 
+ }
+ 
+
+ changeMunicipio()
+ {
+   this.dataApiService.getlocalidades(this.selectedMunicipio, this.selectedEstado)
+   .subscribe((localidades: any) => {
+     console.log(localidades);
+     
+    this.arrLocalidades = localidades;
+
+   });
+ 
+ }
  
 
  private buscarDenues()
  {
+  console.log('prueba');
 
   this.markerService.makeDenuesMarkers(this.map,
     this.selectedEstado,
